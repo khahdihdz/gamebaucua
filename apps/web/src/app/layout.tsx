@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from '@/components/layout/Providers';
 import { Toaster } from 'react-hot-toast';
+import { DisclaimerModal } from '@/components/ui/DisclaimerModal';
 
 export const metadata: Metadata = {
   title: 'Bầu Cua Casino | Chơi Bầu Cua Online',
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="vi" suppressHydrationWarning>
       <body className="min-h-screen bg-casino-bg antialiased">
         <Providers>
+          <DisclaimerModal />
           {children}
           <Toaster position="top-center" />
         </Providers>

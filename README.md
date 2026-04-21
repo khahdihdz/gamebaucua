@@ -1,5 +1,36 @@
 # 🎲 Bầu Cua Casino — Production-Ready
 
+---
+
+## ⚠️ MIỄN TRỪ TRÁCH NHIỆM / DISCLAIMER
+
+> **[TIẾNG VIỆT]**
+>
+> Dự án này được phát triển **chỉ nhằm mục đích giáo dục, học thuật và nghiên cứu kỹ thuật** về lập trình fullstack, realtime systems và kiến trúc phần mềm.
+>
+> - Tất cả "tiền xu" trong hệ thống là **điểm ảo, không có giá trị tiền tệ thực**, không thể quy đổi ra tiền mặt hay tài sản thực tế.
+> - Nhà phát triển **không tổ chức, không vận hành** bất kỳ hình thức cờ bạc hay cá cược có thưởng nào.
+> - Người triển khai và vận hành phần mềm này **tự chịu toàn bộ trách nhiệm pháp lý** liên quan đến luật pháp tại địa phương của mình.
+> - Dự án **không khuyến khích** bất kỳ hành vi vi phạm pháp luật nào.
+> - Tác giả **không chịu trách nhiệm** về bất kỳ hậu quả pháp lý, tài chính hoặc thiệt hại nào phát sinh từ việc sử dụng, sao chép hoặc triển khai mã nguồn này.
+>
+> Nếu bạn muốn vận hành nền tảng game thực tế, hãy tham khảo và tuân thủ đầy đủ các quy định pháp luật hiện hành tại Việt Nam và quốc gia của bạn.
+
+---
+
+> **[ENGLISH]**
+>
+> This project is developed **for educational, academic, and technical research purposes only** — specifically to demonstrate fullstack development, realtime systems, and software architecture patterns.
+>
+> - All in-game "coins" are **virtual points with no real monetary value** and cannot be exchanged for cash or real-world assets.
+> - The developer does **not operate or endorse** any form of real-money gambling or betting.
+> - Anyone who deploys and operates this software **bears full legal responsibility** for compliance with applicable laws in their jurisdiction.
+> - The author is **not liable** for any legal, financial, or other damages arising from the use, copying, or deployment of this codebase.
+>
+> If you intend to operate a real-money gaming platform, consult a qualified lawyer and obtain all necessary licenses for your jurisdiction.
+
+---
+
 Web casino Bầu Cua Tôm Cá fullstack với realtime multiplayer, auto payment, anti-fraud.
 
 ---
