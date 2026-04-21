@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "name": "baucua-web",
+  "framework": "nextjs",
+  "installCommand": "yarn install",
+  "buildCommand": "yarn workspace @baucua/web build",
+  "outputDirectory": "apps/web/.next",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "@baucua-api-url",
+    "NEXT_PUBLIC_WS_URL":  "@baucua-api-url"
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}

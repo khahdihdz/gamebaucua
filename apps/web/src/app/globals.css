@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --font-beVietnam: 'Be Vietnam Pro', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: #0a0a0f;
+  color: #e8e8f0;
+  font-family: var(--font-beVietnam);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #12121a; }
+::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #f5c842; }
+
+/* Gold text */
+.text-gold { 
+  background: linear-gradient(135deg, #f5c842, #e6a817);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Casino button */
+@layer components {
+  .btn-casino {
+    @apply relative px-6 py-3 font-bold rounded-xl overflow-hidden transition-all duration-200;
+    @apply bg-gradient-to-r from-casino-gold to-yellow-500;
+    @apply text-casino-bg hover:brightness-110 active:scale-95;
+    @apply shadow-gold;
+  }
+
+  .btn-casino:disabled {
+    @apply opacity-50 cursor-not-allowed active:scale-100;
+  }
+
+  .card-casino {
+    @apply bg-casino-card border border-casino-border rounded-2xl;
+    @apply shadow-card;
+  }
+
+  .input-casino {
+    @apply w-full bg-casino-surface border border-casino-border rounded-xl px-4 py-3;
+    @apply text-white placeholder-gray-500 focus:outline-none focus:border-casino-gold;
+    @apply transition-colors duration-200;
+  }
+}
+
+/* Dice rolling animation */
+@keyframes diceRoll {
+  0%   { transform: rotate(0deg) scale(1); }
+  25%  { transform: rotate(90deg) scale(1.1); }
+  50%  { transform: rotate(180deg) scale(0.9); }
+  75%  { transform: rotate(270deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.dice-rolling {
+  animation: diceRoll 0.4s linear infinite;
+}
+
+/* Win celebration */
+@keyframes winBurst {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.4); filter: brightness(1.5); }
+  60%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.win-burst { animation: winBurst 0.8s ease-out; }
+
+/* Confetti particle */
+@keyframes confettiFall {
+  0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Chip bounce */
+@keyframes chipBounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(-12px) rotate(5deg); }
+}
+
+.chip-bounce { animation: chipBounce 0.8s ease-in-out; }

@@ -1,0 +1,9 @@
+{
+  "name": "@baucua/payment",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "qrcode": "^1.5.3",
+    "@baucua/db": "*"
+  }
+}
