@@ -1,8 +1,0 @@
-{
-  "name": "@baucua/db",
-  "version": "1.0.0",
-  "main": "index.js",
-  "dependencies": {
-    "mongoose": "^8.0.3"
-  }
-}
