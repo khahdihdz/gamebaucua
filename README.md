@@ -1,6 +1,6 @@
 # 🎲 Bầu Cua Casino — Production-Ready
 
-Casino Bầu Cua Tôm Cá trực tuyến với polling realtime, GitHub OAuth, thanh toán SePay tự động, popup thông báo, và admin panel đầy đủ.
+Casino **Bầu Cua Tôm Cá** trực tuyến với polling realtime, GitHub OAuth, thanh toán SePay tự động, hệ thống **Gift Code**, popup thông báo, và admin panel đầy đủ.
 
 ---
 
@@ -12,29 +12,17 @@ Casino Bầu Cua Tôm Cá trực tuyến với polling realtime, GitHub OAuth, t
 Dự án này **CHỈ dành cho người từ 18 tuổi trở lên**. Nếu bạn chưa đủ 18 tuổi, vui lòng **không sử dụng** dưới bất kỳ hình thức nào.
 
 ### 🎮 Mục đích sử dụng
-Đây là dự án **mã nguồn mở, phi lợi nhuận**, được xây dựng hoàn toàn với mục đích:
+Đây là dự án **mã nguồn mở, phi lợi nhuận**, được xây dựng với mục đích:
 - **Học tập** các công nghệ web (Next.js, Node.js, MongoDB, Redis, OAuth, Webhook)
 - **Nghiên cứu** kiến trúc hệ thống realtime và thanh toán tự động
 - **Demo kỹ thuật** cho cộng đồng lập trình viên
 
-Dự án này **KHÔNG** phải là sòng bạc thực sự, **KHÔNG** nhằm mục đích kinh doanh, và **KHÔNG** khuyến khích hoạt động cờ bạc.
+Dự án **KHÔNG** phải là sòng bạc thực sự, **KHÔNG** nhằm mục đích kinh doanh, và **KHÔNG** khuyến khích hoạt động cờ bạc.
 
 ### ⚖️ Trách nhiệm pháp lý
 - Người triển khai và vận hành có **toàn bộ trách nhiệm** đảm bảo tuân thủ pháp luật địa phương
 - Tại nhiều quốc gia, vận hành dịch vụ cờ bạc trực tuyến không có giấy phép là **vi phạm pháp luật**
-- Tác giả và cộng tác viên **không chịu bất kỳ trách nhiệm pháp lý nào** phát sinh từ việc sử dụng mã nguồn này
-- Nếu bạn không chắc về tính hợp pháp, hãy **tham khảo luật sư** trước khi triển khai
-
-### 💸 Rủi ro tài chính
-- Tác giả **không chịu trách nhiệm** về bất kỳ tổn thất tài chính nào
-- Cờ bạc có thể gây **nghiện** và ảnh hưởng nghiêm trọng đến sức khỏe tâm thần
-- **Đặt giới hạn** cho bản thân và biết dừng đúng lúc
-- Nếu bạn hoặc người thân gặp vấn đề với cờ bạc, hãy liên hệ đường dây hỗ trợ tại địa phương
-
-### 🛡️ Bảo mật & Dữ liệu
-- Mã nguồn được cung cấp **"nguyên trạng" (AS-IS)** không có bảo đảm
-- Người dùng chịu trách nhiệm về **bảo mật** khi triển khai production
-- **Không lưu trữ** thông tin thẻ tín dụng hay dữ liệu nhạy cảm trong hệ thống này
+- Tác giả **không chịu bất kỳ trách nhiệm pháp lý nào** phát sinh từ việc sử dụng mã nguồn này
 
 ### 📄 Giấy phép
 ```
@@ -47,69 +35,108 @@ Tác giả không chịu trách nhiệm về bất kỳ thiệt hại nào phát
 ## 🏗️ Kiến trúc
 
 ```
-baucua/
-├── backend/                  # Node.js + Express (deploy Render)
-│   ├── server.js             # Entry point
-│   ├── models/               # MongoDB Mongoose schemas
-│   │   ├── User.js
-│   │   └── index.js          # Transaction, Bet, Round, FraudLog
+gamebaucua/
+├── backend/                    # Node.js + Express → deploy Render.com
+│   ├── server.js               # Entry point
+│   ├── models/
+│   │   ├── User.js             # Schema người dùng
+│   │   ├── GiftCode.js         # 🆕 Schema gift code
+│   │   └── index.js            # Transaction, Bet, Round, FraudLog
 │   ├── routes/
-│   │   ├── auth.js           # GitHub OAuth
-│   │   ├── game.js           # Game state + betting
-│   │   ├── deposit.js        # SePay webhook + VietQR
-│   │   └── admin.js          # Admin API
+│   │   ├── auth.js             # GitHub OAuth
+│   │   ├── game.js             # Game state + betting
+│   │   ├── deposit.js          # SePay webhook + VietQR
+│   │   ├── giftcode.js         # 🆕 User redeem + Admin CRUD
+│   │   └── admin.js            # Admin analytics, users, fraud, rounds
 │   ├── services/
-│   │   ├── gameEngine.js     # Game loop + Redis state
-│   │   └── antifraud.js      # Fraud detection
+│   │   ├── gameEngine.js       # Game loop + Redis state
+│   │   └── antifraud.js        # Fraud detection
 │   └── config/
-│       ├── passport.js       # GitHub strategy
-│       └── redis.js          # Redis client + lock
+│       ├── passport.js         # GitHub strategy
+│       └── redis.js            # Redis client + lock
 │
-└── frontend/                 # Next.js 14 App Router (deploy Vercel)
+└── frontend/                   # Next.js 14 App Router → deploy Vercel
     ├── app/
-    │   ├── layout.tsx         # Root: Toast + Disclaimer
-    │   ├── page.tsx           # Game + ResultPopup
-    │   ├── deposit/           # Nạp tiền + QR
-    │   └── admin/             # Dashboard, Transactions, Users, Fraud, Rounds
+    │   ├── layout.tsx           # Root: Toast + Disclaimer
+    │   ├── page.tsx             # Game + ResultPopup
+    │   ├── deposit/             # Nạp tiền + VietQR
+    │   └── admin/
+    │       ├── layout.tsx       # 🆕 Sidebar responsive + mobile drawer
+    │       ├── page.tsx         # Dashboard analytics
+    │       ├── transactions/    # Lịch sử giao dịch + phân trang
+    │       ├── users/           # Quản lý người dùng + sửa số dư
+    │       ├── giftcodes/       # 🆕 Tạo / bật-tắt / xóa gift code
+    │       ├── fraud/           # Fraud logs
+    │       └── rounds/          # Lịch sử ván cược
     ├── components/
-    │   ├── Toast.tsx          # 🆕 Global toast notifications
-    │   ├── DisclaimerModal.tsx # 🆕 Disclaimer popup (first visit)
-    │   ├── ResultPopup.tsx    # 🆕 Win/loss result popup
+    │   ├── Toast.tsx            # Global toast notifications
+    │   ├── DisclaimerModal.tsx  # Disclaimer popup (first visit)
+    │   ├── ResultPopup.tsx      # Win/loss popup sau mỗi ván
     │   ├── BettingBoard.tsx
     │   ├── DiceResult.tsx
     │   ├── PhaseTimer.tsx
     │   └── Navbar.tsx
     └── lib/
-        ├── api.ts
+        ├── api.ts               # fetch wrapper (get/post/patch/delete)
         ├── useAuth.tsx
-        ├── useGameState.ts    # Polling 2s
+        ├── useGameState.ts      # Polling 2s
         └── symbols.ts
 ```
 
 ---
 
-## 🆕 Popup & Thông báo
+## 🆕 Tính năng mới
 
-### DisclaimerModal
-- Hiện **tự động khi vào trang lần đầu**
-- Lưu trạng thái vào `localStorage` — không hiện lại sau khi đồng ý
-- Yêu cầu tick checkbox **"Tôi đã đọc và đồng ý"** mới cho phép tiếp tục
-- Nút "Rời khỏi trang" redirect sang google.com
-- Nội dung: độ tuổi 18+, pháp lý, rủi ro tài chính, cảnh báo nghiện
+### 🎁 Hệ thống Gift Code
+Admin tạo mã quà tặng, người dùng nhập để nhận tiền thưởng ngay.
 
-### ResultPopup
-- Hiện **tự động sau mỗi ván** nếu người dùng có đặt cược
-- Animation flip xúc xắc + hiệu ứng 🏆 win / 💀 lose
-- Hiển thị breakdown từng ô: số tiền cược × số lần khớp
-- Tự đóng sau 5 giây hoặc click dismiss
-- Tính lợi nhuận/thua lỗ chính xác
+**Backend:**
+- `POST /api/giftcode/redeem` — User nhập code để nhận tiền (yêu cầu đăng nhập)
+- `GET  /admin/giftcodes` — Lấy danh sách code (có phân trang + filter)
+- `POST /admin/giftcodes` — Tạo code mới
+- `PATCH /admin/giftcodes/:id/toggle` — Bật/tắt code
+- `DELETE /admin/giftcodes/:id` — Xóa code
 
-### Toast System
-- **4 loại:** success ✅ / error ❌ / warning ⚠️ / info ℹ️
-- Progress bar đếm ngược TTL (mặc định 4s)
-- Stack tối đa 5 toast, vị trí top-right
-- Được dùng tại: đặt cược thành công/thất bại, nạp tiền, lỗi API
-- Hook: `const { success, error, warning, info } = useToast()`
+**Tính năng gift code:**
+- Giới hạn lượt dùng (`maxUses`): đặt `0` = vô hạn, `1` = single-use
+- Thời hạn tùy chọn (`expiresAt`): để trống = không hết hạn
+- Chống dùng lại: mỗi tài khoản chỉ dùng 1 code 1 lần
+- Tạo code ngẫu nhiên bằng nút 🎲 trong admin panel
+- Ghi chú nội bộ cho admin
+
+**Frontend Admin (`/admin/giftcodes`):**
+- Form tạo code với các trường: code, số tiền, lượt dùng, hết hạn, ghi chú
+- Bảng desktop + card layout mobile
+- Thanh tiến trình lượt dùng (xanh → cam → đỏ)
+- Bật/tắt và xóa inline
+
+### 📱 Admin Panel — Responsive cải tiến
+Layout admin được viết lại để hiển thị tốt trên mọi màn hình:
+
+| Màn hình | Layout |
+|----------|--------|
+| Desktop (≥768px) | Sidebar cố định bên trái, sticky khi scroll |
+| Mobile (<768px) | Topbar sticky + Drawer menu trượt từ phải |
+
+**Chi tiết cải tiến:**
+- **Mobile drawer**: menu trượt ra từ phải với overlay nền mờ, đóng khi tap ra ngoài
+- **Active indicator**: chấm vàng nhỏ bên phải item đang active
+- **User badge**: hiển thị avatar + username admin ở cuối sidebar
+- **Hover animation**: icon nav scale nhẹ khi hover
+- Tất cả các trang admin (`users`, `transactions`, `rounds`) đã có `overflow-x-auto` cho table
+
+---
+
+## 🎮 Game Loop
+
+```
+BETTING (10s) ──► ROLLING (5s) ──► RESULT (3s) ──► BETTING ...
+
+Server: tick() mỗi 1s → cập nhật Redis (TTL 2s)
+Client: poll GET /api/game/state mỗi 2s
+```
+
+**Tỷ lệ thưởng:** 1 khớp = ×1 + hoàn vốn | 2 khớp = ×2 | 3 khớp = ×3
 
 ---
 
@@ -120,7 +147,7 @@ baucua/
 ```bash
 cd backend
 cp .env.example .env
-# Điền đủ các biến môi trường
+# Điền đủ các biến môi trường (xem bảng bên dưới)
 npm install
 node server.js
 ```
@@ -141,25 +168,25 @@ npm run dev
 
 ### Backend → Render.com
 
-1. Tạo **Web Service** mới
-2. Connect GitHub → chọn folder `backend/`
+1. Tạo **Web Service** mới, connect repo GitHub
+2. **Root Directory:** `backend`
 3. **Build:** `npm install` | **Start:** `node server.js`
-4. Thêm ENV vars:
+4. Thêm Environment Variables:
 
-| Key | Value |
-|-----|-------|
+| Key | Giá trị |
+|-----|---------|
 | `PORT` | `10000` |
 | `NODE_ENV` | `production` |
-| `MONGO_URI` | `mongodb+srv://...` |
-| `REDIS_URL` | Redis URL (Upstash free tier) |
-| `GITHUB_CLIENT_ID` | GitHub OAuth App ID |
-| `GITHUB_CLIENT_SECRET` | GitHub OAuth Secret |
-| `SESSION_SECRET` | Random ≥ 32 ký tự |
+| `MONGO_URI` | `mongodb+srv://user:pass@cluster.mongodb.net/casino` |
+| `REDIS_URL` | Redis URL (Upstash free tier khuyến nghị) |
+| `GITHUB_CLIENT_ID` | GitHub OAuth App Client ID |
+| `GITHUB_CLIENT_SECRET` | GitHub OAuth App Client Secret |
+| `SESSION_SECRET` | Chuỗi ngẫu nhiên ≥ 32 ký tự |
 | `FRONTEND_URL` | `https://your-app.vercel.app` |
 | `BACKEND_URL` | `https://your-backend.onrender.com` |
-| `SEPAY_BANK` | Mã NH: `MB`, `VCB`, `TCB`... |
-| `SEPAY_ACCOUNT` | Số tài khoản |
-| `ADMIN_USERS` | GitHub username, cách nhau dấu phẩy |
+| `SEPAY_BANK` | Mã ngân hàng: `MB`, `VCB`, `TCB`... |
+| `SEPAY_ACCOUNT` | Số tài khoản ngân hàng |
+| `ADMIN_USERS` | GitHub username admin, cách nhau dấu phẩy |
 
 ### Frontend → Vercel
 
@@ -173,42 +200,29 @@ npx vercel --prod
 
 ## 🔑 GitHub OAuth Setup
 
-1. **GitHub → Settings → Developer settings → OAuth Apps → New**
-2. Homepage: `https://your-app.vercel.app`
-3. Callback: `https://your-backend.onrender.com/auth/github/callback`
-4. Copy Client ID + Secret → Render ENV
+1. GitHub → **Settings → Developer settings → OAuth Apps → New OAuth App**
+2. **Homepage URL:** `https://your-app.vercel.app`
+3. **Authorization callback URL:** `https://your-backend.onrender.com/auth/github/callback`
+4. Copy **Client ID** + **Client Secret** → dán vào Render ENV
 
 ---
 
 ## 💰 SePay Webhook
 
 1. Đăng ký [SePay.vn](https://sepay.vn) → thêm tài khoản ngân hàng
-2. Webhook URL: `https://your-backend.onrender.com/webhook/sepay`
-3. Format nội dung CK: `NAP{userId_6chars}{random_5chars}` — hệ thống tự sinh
-
----
-
-## 🎮 Game Loop
-
-```
-BETTING (10s) ──► ROLLING (5s) ──► RESULT (3s) ──► BETTING ...
-
-Server: tick() mỗi 1s → cập nhật Redis (TTL 2s)
-Client: poll GET /api/game/state mỗi 2s
-```
-
-**Tỷ lệ thưởng:** 1 khớp = 1x + hoàn vốn | 2 khớp = 2x + hoàn vốn | 3 khớp = 3x + hoàn vốn
+2. **Webhook URL:** `https://your-backend.onrender.com/webhook/sepay`
+3. Format nội dung chuyển khoản: `NAP{userId_6chars}{random_5chars}` — hệ thống tự sinh khi người dùng tạo lệnh nạp
 
 ---
 
 ## 🔒 Anti-Fraud
 
 | Rule | Ngưỡng | Điểm Risk |
-|------|--------|-----------|
-| Spam nạp tiền | >5 lần/phút | +40 |
+|------|--------|-----------| 
+| Spam nạp tiền | > 5 lần / phút | +40 |
 | Sai số tiền CK | Thực tế < Yêu cầu | +30 |
 | Duplicate webhook | Content đã xử lý | Block ngay |
-| Risk ≥ 70 | — | 🚨 Khóa TK |
+| Risk ≥ 70 | — | 🚨 Khóa tài khoản |
 
 ---
 
@@ -216,28 +230,35 @@ Client: poll GET /api/game/state mỗi 2s
 
 ```
 # Auth
-GET  /auth/github           → OAuth redirect
-GET  /auth/me               → User hiện tại
+GET  /auth/github                     → OAuth redirect
+GET  /auth/me                         → User hiện tại
 POST /auth/logout
 
 # Game
-GET  /api/game/state        → Poll 2s
-POST /api/game/bet          → { betData: { bau: 10000 } }
+GET  /api/game/state                  → Poll 2s
+POST /api/game/bet                    → { betData: { bau: 10000 } }
 GET  /api/game/history
 
 # Deposit
-POST /api/deposit/create    → { amount }
+POST /api/deposit/create              → { amount }
 GET  /api/deposit/status/:id
-POST /webhook/sepay         → SePay callback
+POST /webhook/sepay                   → SePay callback
+
+# Gift Code
+POST /api/giftcode/redeem             → { code: "ABC123" }  [user authed]
 
 # Admin
 GET   /admin/analytics
-GET   /admin/transactions
-GET   /admin/users
-PATCH /admin/users/:id/balance
+GET   /admin/transactions             → ?status=&page=
+GET   /admin/users                    → ?flagged=true&page=
+PATCH /admin/users/:id/balance        → { balance: 50000 }
 PATCH /admin/users/:id/unflag
 GET   /admin/fraud
 GET   /admin/rounds
+GET   /admin/giftcodes                → ?active=true&page=
+POST  /admin/giftcodes                → { code, amount, maxUses, expiresAt?, note? }
+PATCH /admin/giftcodes/:id/toggle
+DELETE /admin/giftcodes/:id
 ```
 
 ---
@@ -245,17 +266,18 @@ GET   /admin/rounds
 ## 🛡️ Security Notes
 
 - Session cookie: `httpOnly`, `secure: true`, `sameSite: none` (production)
-- Rate limit deposit: 5 req/phút
+- Rate limit deposit: 5 req / phút per user
 - Redis distributed lock chống duplicate webhook
 - Helmet.js security headers
 - Server-side validate toàn bộ — không trust client
+- Gift code: kiểm tra per-user đã dùng chưa ở tầng DB
 
 ---
 
 ## 📦 Tech Stack
 
-| | Tech |
-|--|------|
+| Layer | Tech |
+|-------|------|
 | Frontend | Next.js 14 App Router, TailwindCSS, Framer Motion |
 | Backend | Node.js, Express, Passport.js |
 | Database | MongoDB Atlas (Mongoose) |
@@ -267,4 +289,21 @@ GET   /admin/rounds
 
 ---
 
-*Dự án này được cung cấp "nguyên trạng" không có bảo đảm. Tác giả không chịu trách nhiệm về bất kỳ thiệt hại nào phát sinh từ việc sử dụng.*
+## 📁 Changelog
+
+### v2.0
+- 🆕 Thêm hệ thống Gift Code (backend model + routes + admin UI)
+- 🆕 Admin layout responsive: sticky sidebar desktop, mobile drawer
+- 🆕 `api.delete()` helper trong frontend
+- 📖 README viết lại đầy đủ
+
+### v1.0
+- Game Bầu Cua Tôm Cá realtime
+- GitHub OAuth + session
+- SePay webhook + VietQR deposit
+- Admin panel: analytics, users, transactions, fraud, rounds
+- Toast system + DisclaimerModal + ResultPopup
+
+---
+
+*Dự án được cung cấp "nguyên trạng" không có bảo đảm. Tác giả không chịu trách nhiệm về bất kỳ thiệt hại nào phát sinh từ việc sử dụng.*

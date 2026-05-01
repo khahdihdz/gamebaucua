@@ -28,6 +28,7 @@ function rollDice() {
 async function saveState(state) {
   try {
     const redis = await getRedis();
+    if (!redis) return; // no Redis, state kept in-memory only
     await redis.set('game_state', JSON.stringify(state), { EX: 30 });
   } catch (e) {
     console.error('Redis saveState error:', e.message);
@@ -152,8 +153,10 @@ async function tick() {
 async function getGameState() {
   try {
     const redis = await getRedis();
-    const cached = await redis.get('game_state');
-    if (cached) return JSON.parse(cached);
+    if (redis) {
+      const cached = await redis.get('game_state');
+      if (cached) return JSON.parse(cached);
+    }
   } catch (e) {}
   return currentState;
 }

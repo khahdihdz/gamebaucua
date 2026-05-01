@@ -96,8 +96,8 @@ export default function AdminUsers() {
                     {editing?.id === u._id ? (
                       <input
                         type="number"
-                        value={editing.balance}
-                        onChange={e => setEditing({ ...editing, balance: parseInt(e.target.value) })}
+                        value={editing!.balance}
+                        onChange={e => setEditing({ ...editing!, balance: parseInt(e.target.value) })}
                         className="w-28 bg-white/10 border border-yellow-500/30 rounded-lg px-2 py-1 text-white text-sm focus:outline-none"
                       />
                     ) : (

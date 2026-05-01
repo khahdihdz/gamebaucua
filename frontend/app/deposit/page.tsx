@@ -4,6 +4,7 @@ import { useAuth } from '@/lib/useAuth';
 import { api } from '@/lib/api';
 import Image from 'next/image';
 import { useToast } from '@/components/Toast';
+import GiftCodeInput from '@/components/GiftCodeInput';
 
 interface DepositInfo {
   transactionId: string;
@@ -20,6 +21,7 @@ export default function DepositPage() {
   const { user, refresh } = useAuth();
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { success, error: toastError } = useToast();
   const [deposit, setDeposit] = useState<DepositInfo | null>(null);
   const [pollStatus, setPollStatus] = useState<'pending' | 'done' | null>(null);
@@ -43,6 +45,7 @@ export default function DepositPage() {
   }, [deposit, pollStatus, refresh]);
 
   const createDeposit = async () => {
+    setError('');
     const amt = parseInt(amount);
     if (isNaN(amt) || amt < 10000) {
       setError('Số tiền tối thiểu 10,000đ');
@@ -82,11 +85,16 @@ export default function DepositPage() {
         </p>
 
         {/* Balance */}
-        <div className="glass rounded-2xl p-4 mb-6 flex items-center justify-between">
+        <div className="glass rounded-2xl p-4 mb-4 flex items-center justify-between">
           <span className="text-gray-400 text-sm">Số dư hiện tại</span>
           <span className="text-yellow-400 font-black text-xl">
             {user.balance.toLocaleString('vi-VN')}đ
           </span>
+        </div>
+
+        {/* Gift Code */}
+        <div className="mb-6">
+          <GiftCodeInput onSuccess={() => {}} />
         </div>
 
         {pollStatus === 'done' ? (

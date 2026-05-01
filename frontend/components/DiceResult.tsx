@@ -13,53 +13,52 @@ function Dice({ symbol, delay }: { symbol: string; delay: number }) {
 
   return (
     <motion.div
-      initial={{ rotateY: 0, scale: 0.5, opacity: 0 }}
-      animate={{ rotateY: 360, scale: 1, opacity: 1 }}
-      transition={{ duration: 0.6, delay, type: 'spring', bounce: 0.4 }}
-      className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${cfg.color} flex flex-col items-center justify-center shadow-2xl border border-white/10`}
+      initial={{ rotateY: -90, scale: 0.6, opacity: 0 }}
+      animate={{ rotateY: 0, scale: 1, opacity: 1 }}
+      transition={{ duration: 0.5, delay, type: 'spring', bounce: 0.35 }}
+      className={`w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br ${cfg.color} flex flex-col items-center justify-center shadow-2xl border border-white/15 gold-glow-strong`}
     >
-      <span className="text-3xl">{cfg.emoji}</span>
-      <span className="text-xs font-bold text-white/90 mt-0.5">{cfg.label}</span>
+      <span className="text-3xl sm:text-4xl leading-none">{cfg.emoji}</span>
+      <span className="text-[10px] sm:text-xs font-bold text-white/90 mt-1 tracking-wide">{cfg.label}</span>
     </motion.div>
   );
 }
+
+const SpinningDice = ({ i }: { i: number }) => (
+  <div
+    className="w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-yellow-700/60 to-yellow-950 flex items-center justify-center shadow-xl border border-yellow-500/25 animate-dice"
+    style={{ animationDelay: `${i * 0.12}s` }}
+  >
+    <span className="text-3xl">🎲</span>
+  </div>
+);
+
+const EmptyDice = () => (
+  <div className="w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl bg-white/4 border border-white/8 flex items-center justify-center">
+    <span className="text-2xl opacity-15">?</span>
+  </div>
+);
 
 export default function DiceResult({ result, phase }: Props) {
   const rolling = phase === 'rolling';
 
   return (
-    <div className="glass rounded-2xl p-6 gold-glow">
-      <h3 className="text-center text-xs font-bold text-gray-500 tracking-widest uppercase mb-4">
-        KẾT QUẢ XÚC XẮC
-      </h3>
+    <div className="glass rounded-2xl p-5 gold-glow">
+      <p className="text-center text-[10px] font-bold text-gray-600 tracking-[0.2em] uppercase mb-4">
+        Kết Quả Xúc Xắc
+      </p>
 
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-3 sm:gap-4">
         {rolling ? (
-          // Spinning dice during rolling phase
-          [0, 1, 2].map(i => (
-            <div
-              key={i}
-              className="w-20 h-20 rounded-2xl bg-gradient-to-br from-yellow-600 to-yellow-900 flex items-center justify-center shadow-2xl border border-yellow-500/30 animate-dice"
-              style={{ animationDelay: `${i * 0.15}s` }}
-            >
-              <span className="text-3xl">🎲</span>
-            </div>
-          ))
+          [0, 1, 2].map(i => <SpinningDice key={i} i={i} />)
         ) : result ? (
           <AnimatePresence>
-            <Dice key="d1" symbol={result.dice1} delay={0} />
-            <Dice key="d2" symbol={result.dice2} delay={0.15} />
-            <Dice key="d3" symbol={result.dice3} delay={0.3} />
+            <Dice key={`d1-${result.dice1}`} symbol={result.dice1} delay={0} />
+            <Dice key={`d2-${result.dice2}`} symbol={result.dice2} delay={0.12} />
+            <Dice key={`d3-${result.dice3}`} symbol={result.dice3} delay={0.24} />
           </AnimatePresence>
         ) : (
-          [0, 1, 2].map(i => (
-            <div
-              key={i}
-              className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center"
-            >
-              <span className="text-2xl opacity-20">?</span>
-            </div>
-          ))
+          [0, 1, 2].map(i => <EmptyDice key={i} />)
         )}
       </div>
     </div>

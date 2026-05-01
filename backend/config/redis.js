@@ -1,38 +1,83 @@
 const { createClient } = require('redis');
 
-let client;
+let client = null;
+let redisAvailable = false;
 
 async function getRedis() {
+  // If REDIS_URL is not configured, skip Redis entirely
+  if (!process.env.REDIS_URL) {
+    return null;
+  }
+
+  if (client && redisAvailable) {
+    return client;
+  }
+
   if (!client) {
     client = createClient({
-      url: process.env.REDIS_URL || 'redis://localhost:6379',
+      url: process.env.REDIS_URL,
       socket: {
-        reconnectStrategy: (retries) => Math.min(retries * 100, 3000)
+        reconnectStrategy: (retries) => {
+          if (retries > 5) {
+            // Stop retrying after 5 attempts — don't spam logs forever
+            console.warn('[Redis] Max retries reached. Running without Redis.');
+            redisAvailable = false;
+            return false; // stop reconnecting
+          }
+          return Math.min(retries * 500, 5000);
+        }
       }
     });
-    
-    client.on('error', (err) => console.error('Redis error:', err));
-    client.on('connect', () => console.log('Redis connected'));
-    
-    await client.connect();
+
+    client.on('error', (err) => {
+      if (redisAvailable) {
+        console.error('[Redis] Connection lost:', err.message);
+      }
+      redisAvailable = false;
+    });
+
+    client.on('connect', () => {
+      console.log('[Redis] Connected');
+      redisAvailable = true;
+    });
+
+    client.on('ready', () => {
+      redisAvailable = true;
+    });
+
+    try {
+      await client.connect();
+      redisAvailable = true;
+    } catch (err) {
+      console.warn('[Redis] Could not connect:', err.message, '— running without Redis.');
+      redisAvailable = false;
+      client = null;
+      return null;
+    }
   }
-  return client;
+
+  return redisAvailable ? client : null;
 }
 
-// Distributed lock
+// Distributed lock — gracefully no-ops when Redis unavailable
 async function acquireLock(key, ttlSeconds = 10) {
-  const redis = await getRedis();
-  const lockKey = `lock:${key}`;
-  const result = await redis.set(lockKey, '1', {
-    NX: true,
-    EX: ttlSeconds
-  });
-  return result === 'OK';
+  try {
+    const redis = await getRedis();
+    if (!redis) return true; // no Redis = no distributed lock, allow through
+    const lockKey = `lock:${key}`;
+    const result = await redis.set(lockKey, '1', { NX: true, EX: ttlSeconds });
+    return result === 'OK';
+  } catch {
+    return true;
+  }
 }
 
 async function releaseLock(key) {
-  const redis = await getRedis();
-  await redis.del(`lock:${key}`);
+  try {
+    const redis = await getRedis();
+    if (!redis) return;
+    await redis.del(`lock:${key}`);
+  } catch {}
 }
 
 module.exports = { getRedis, acquireLock, releaseLock };
